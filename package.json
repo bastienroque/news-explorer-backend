@@ -1,0 +1,41 @@
+{
+  "name": "news-explorer-backend",
+  "version": "1.0.0",
+  "description": "News Explorer project",
+  "homepage": "https://github.com/bastienroque/news-explorer-backend#readme",
+  "bugs": {
+    "url": "https://github.com/bastienroque/news-explorer-backend/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bastienroque/news-explorer-backend.git"
+  },
+  "license": "ISC",
+  "author": "Bastien Roque",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "celebrate": "^15.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-winston": "^4.2.0",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongodb": "^7.2.0",
+    "mongoose": "^9.6.2",
+    "node": "^26.1.0",
+    "path": "^0.12.7",
+    "require": "^2.4.20",
+    "validator": "^13.15.35",
+    "winston": "^3.19.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
