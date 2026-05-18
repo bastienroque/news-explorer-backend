@@ -15,9 +15,9 @@ export const validateUserId = celebrate({
 });
 
 export const validateAuth = celebrate({
-  headers: Joi.object()
-    .keys({
-      Authorization: Joi.string().required(),
-    })
-    .unknown(true),
+  headers: Joi.object({
+    authorization: Joi.string()
+      .pattern(/^Bearer\s.+$/)
+      .required(),
+  }).unknown(true),
 });

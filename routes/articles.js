@@ -6,9 +6,11 @@ import {
   removeArticle,
 } from "../controllers/articles.js";
 import { auth } from "../middleware/auth.js";
+import { validateAuth } from "../middleware/validation.js";
 
 const router = express.Router();
 
+router.use(validateAuth);
 router.use(auth);
 
 router.get("/articles", getArticles);

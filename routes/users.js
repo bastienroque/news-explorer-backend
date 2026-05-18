@@ -2,7 +2,6 @@ import express from "express";
 import {
   validateCreateUser,
   validateUserId,
-  validateAuth,
 } from "../middleware/validation.js";
 import {
   getCurrentUser,
@@ -14,7 +13,7 @@ import { auth } from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.post("/signin", validateAuth, signinUser);
+router.post("/signin", signinUser);
 
 router.post("/signup", validateCreateUser, signupUser);
 
