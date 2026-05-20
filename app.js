@@ -7,13 +7,21 @@ import { errorHandler } from "./middleware/errorHandler.js";
 import { requestLogger, errorLogger } from "./middleware/logger.js";
 
 import usersRoutes from "./routes/users.js";
+import newsRoutes from "./routes/news.js";
 import articlesRoutes from "./routes/articles.js";
 
 dotenv.config();
 
 export const app = express();
 
-app.use(cors());
+const allowedOrigin = process.env.CLIENT_URL;
+
+app.use(
+  cors({
+    origin: allowedOrigin,
+    credentials: true,
+  }),
+);
 
 app.use(express.json());
 
@@ -30,6 +38,7 @@ app.get("/crash-test", () => {
   }, 0);
 });
 
+app.use("/news", newsRoutes);
 app.use("/users", usersRoutes);
 app.use("/articles", articlesRoutes);
 
