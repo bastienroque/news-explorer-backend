@@ -6,19 +6,18 @@ import {
   removeArticle,
 } from "../controllers/articles.js";
 import { auth } from "../middleware/auth.js";
-import { validateAuth } from "../middleware/validation.js";
+import { validateArticleId } from "../middleware/validation.js";
 
 const router = express.Router();
 
-router.use(validateAuth);
 router.use(auth);
 
-router.get("/articles", getArticles);
+router.get("/", getArticles);
 
-router.post("/articles", createArticle);
+router.post("/", createArticle);
 
-router.put("/articles/:articleId", saveArticle);
+router.put("/:articleId", validateArticleId, saveArticle);
 
-router.delete("/articles/:articleId", removeArticle);
+router.delete("/:articleId", validateArticleId, removeArticle);
 
 export default router;

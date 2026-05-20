@@ -31,7 +31,7 @@ export const signupUser = async (req, res) => {
 
     const token = createToken(user._id);
 
-    res.status(201).json({ email, token, username });
+    res.status(200).json({ email, token, username });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -40,14 +40,25 @@ export const signupUser = async (req, res) => {
 // GET /users/me - returns current user
 export const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
-    .then((user) => res.send(user))
+    .select("-password")
+    .then((user) =>
+      res.send({
+        email: user.email,
+        username: user.username,
+      }),
+    )
     .catch(next);
 };
 
 // GET /users/:userId - returns specific user
-export const getUserById = (req, res) => {
+export const getUserById = (req, res, next) => {
   User.findById(req.params.userId)
     .orFail()
-    .then((user) => res.send(user))
+    .then((user) =>
+      res.send({
+        email: user.email,
+        username: user.username,
+      }),
+    )
     .catch(next);
 };

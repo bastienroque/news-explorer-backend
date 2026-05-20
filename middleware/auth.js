@@ -4,15 +4,21 @@ import User from "../models/user.js";
 const jwt = jsonwebtoken;
 
 export const auth = async (req, res, next) => {
-  const Authorization = req.headers.authorization;
+  const authorization = req.headers.authorization;
 
-  console.log("Authorization header:", Authorization);
-
-  if (!Authorization) {
-    return res.status(403).json({ error: "Authorization token required" });
+  if (!authorization) {
+    return res.status(401).json({
+      error: "Authorization token required",
+    });
   }
 
-  const token = Authorization.replace("Bearer ", "");
+  const [scheme, token] = authorization.split(" ");
+
+  if (scheme !== "Bearer" || !token) {
+    return res.status(401).json({
+      error: "Invalid authorization format",
+    });
+  }
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
@@ -20,13 +26,17 @@ export const auth = async (req, res, next) => {
     const user = await User.findById(payload._id);
 
     if (!user) {
-      return res.status(401).json({ error: "User not found" });
+      return res.status(401).json({
+        error: "User not found",
+      });
     }
 
     req.user = user;
-    return next();
+
+    next();
   } catch (error) {
-    console.log("AUTH ERROR:", error);
-    return res.status(401).json({ error: "Request is not authorized" });
+    return res.status(401).json({
+      error: "Request is not authorized",
+    });
   }
 };
