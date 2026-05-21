@@ -7,11 +7,9 @@ const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 };
 
-// Signin user
 export const signinUser = async (req, res) => {
-  const { email, password } = req.body;
-
   try {
+    const { email, password } = req.body;
     const user = await User.signin(email, password);
 
     const token = createToken(user._id);
@@ -22,11 +20,9 @@ export const signinUser = async (req, res) => {
   }
 };
 
-// Signup user
 export const signupUser = async (req, res) => {
-  const { email, password, username } = req.body;
-
   try {
+    const { email, password, username } = req.body;
     const user = await User.signup(email, password, username);
 
     const token = createToken(user._id);
@@ -37,7 +33,6 @@ export const signupUser = async (req, res) => {
   }
 };
 
-// GET /users/me - returns current user
 export const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
     .select("-password")
@@ -50,7 +45,6 @@ export const getCurrentUser = (req, res, next) => {
     .catch(next);
 };
 
-// GET /users/:userId - returns specific user
 export const getUserById = (req, res, next) => {
   User.findById(req.params.userId)
     .orFail()

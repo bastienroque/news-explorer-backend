@@ -3,7 +3,7 @@ import Article from "../models/article.js";
 export const getArticles = (req, res, next) => {
   console.log("user:", req.user);
   Article.find({ owner: req.user._id })
-    .then((cards) => res.send(cards))
+    .then((articles) => res.send(articles))
     .catch(next);
 };
 
@@ -20,7 +20,14 @@ export const createArticle = (req, res, next) => {
     image,
     owner: req.user._id,
   })
-    .then((article) => res.status(201).send(article))
+    .then((article) => {
+      const articleObj = article.toObject();
+
+      delete articleObj.owner;
+      delete articleObj.__v;
+
+      res.status(201).send(articleObj);
+    })
     .catch(next);
 };
 
