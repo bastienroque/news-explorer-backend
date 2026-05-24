@@ -14,7 +14,7 @@ export const signinUser = async (req, res) => {
 
     const token = createToken(user._id);
 
-    res.status(200).json({ email, token });
+    res.status(200).json({ email, token, username: user.username });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -27,32 +27,26 @@ export const signupUser = async (req, res) => {
 
     const token = createToken(user._id);
 
-    res.status(200).json({ email, token, username });
+    res.status(201).json({ email, token, username });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
 
-export const getCurrentUser = (req, res, next) => {
-  User.findById(req.user._id)
-    .select("-password")
-    .then((user) =>
-      res.send({
-        email: user.email,
-        username: user.username,
-      }),
-    )
-    .catch(next);
+export const getCurrentUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id).select("-password");
+    res.send({ email: user.email, username: user.username });
+  } catch (err) {
+    next(err);
+  }
 };
 
-export const getUserById = (req, res, next) => {
-  User.findById(req.params.userId)
-    .orFail()
-    .then((user) =>
-      res.send({
-        email: user.email,
-        username: user.username,
-      }),
-    )
-    .catch(next);
+export const getUserById = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.userId).orFail();
+    res.send({ email: user.email, username: user.username });
+  } catch (err) {
+    next(err);
+  }
 };

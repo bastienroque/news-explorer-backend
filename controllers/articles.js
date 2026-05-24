@@ -1,54 +1,49 @@
 import Article from "../models/article.js";
 
-export const getArticles = (req, res, next) => {
-  console.log("user:", req.user);
-  Article.find({ owner: req.user._id })
-    .then((articles) => res.send(articles))
-    .catch(next);
+export const getArticles = async (req, res, next) => {
+  try {
+    console.log("user:", req.user);
+    const articles = await Article.find({ owner: req.user._id });
+    res.send(articles);
+  } catch (error) {
+    next(error);
+  }
 };
 
-export const createArticle = (req, res, next) => {
-  const { keyword, title, description, date, source, url, image } = req.body;
+export const createArticle = async (req, res, next) => {
+  try {
+    const { keyword, title, description, date, source, url, image } = req.body;
 
-  Article.create({
-    keyword,
-    title,
-    description,
-    date,
-    source,
-    url,
-    image,
-    owner: req.user._id,
-  })
-    .then((article) => {
-      const articleObj = article.toObject();
+    const article = await Article.create({
+      keyword,
+      title,
+      description,
+      date,
+      source,
+      url,
+      image,
+      owner: req.user._id,
+    });
 
-      delete articleObj.owner;
-      delete articleObj.__v;
+    const articleObj = article.toObject();
+    delete articleObj.owner;
+    delete articleObj.__v;
 
-      res.status(201).send(articleObj);
-    })
-    .catch(next);
+    res.status(201).send(articleObj);
+  } catch (error) {
+    next(error);
+  }
 };
 
-export const saveArticle = (req, res, next) => {
-  Article.findByIdAndUpdate(
-    req.params.articleId,
-    { $addToSet: { likes: req.user._id } },
-    { new: true },
-  )
-    .orFail()
-    .then((article) => res.send(article))
-    .catch(next);
-};
+export const removeArticle = async (req, res, next) => {
+  try {
+    const article = await Article.findOneAndDelete({
+      _id: req.params.articleId,
+      owner: req.user._id,
+    }).orFail();
 
-export const removeArticle = (req, res, next) => {
-  Article.findByIdAndUpdate(
-    req.params.articleId,
-    { $pull: { likes: req.user._id } },
-    { new: true },
-  )
-    .orFail()
-    .then((article) => res.send(article))
-    .catch(next);
+    res.send(article);
+  } catch (error) {
+    next(error);
+  }
 };

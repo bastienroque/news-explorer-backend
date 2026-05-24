@@ -2,7 +2,6 @@ import express from "express";
 import {
   getArticles,
   createArticle,
-  saveArticle,
   removeArticle,
 } from "../controllers/articles.js";
 import { auth } from "../middleware/auth.js";
@@ -15,8 +14,6 @@ router.use(auth);
 router.get("/", getArticles);
 
 router.post("/", createArticle);
-
-router.put("/:articleId", validateArticleId, saveArticle);
 
 router.delete("/:articleId", validateArticleId, removeArticle);
 
