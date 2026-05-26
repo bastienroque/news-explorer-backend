@@ -30,7 +30,7 @@ userSchema.statics.signin = async function (email, password) {
   const user = await this.findOne({ email });
 
   if (!user) {
-    throw Error("Incorrect email");
+    throw Error("User doesn't exist");
   }
   const match = await bcrypt.compare(password, user.password);
 
